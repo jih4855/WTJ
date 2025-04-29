@@ -1,10 +1,11 @@
 'use server';
 
-import db from '@/lib/db';
+// import db from '@/lib/db'; // SQLite db 임포트 제거
+import { db } from '@/lib/firebase'; // Firestore db 임포트 추가
 import { revalidatePath } from 'next/cache';
 import bcrypt from 'bcrypt';
 
-// 글 삭제 Server Action
+// 글 삭제 Server Action (Firestore 버전으로 수정 필요할 수 있음 - 여기서는 일단 유지)
 export async function deletePost(formData: FormData) {
   const postId = formData.get('postId');
 
@@ -13,76 +14,78 @@ export async function deletePost(formData: FormData) {
     return { error: '유효하지 않은 포스트 ID입니다.' };
   }
 
-  const id = parseInt(postId, 10);
-  if (isNaN(id)) {
-    return { error: '포스트 ID는 숫자여야 합니다.' };
-  }
+  // Firestore ID는 보통 문자열이지만, 만약 숫자 ID를 사용했다면 파싱
+  // const id = parseInt(postId, 10);
+  // if (isNaN(id)) {
+  //   return { error: '포스트 ID는 숫자여야 합니다.' };
+  // }
 
   try {
-    const stmt = db.prepare('DELETE FROM posts WHERE id = ?');
-    const info = stmt.run(id);
+    // Firestore 문서 삭제
+    await db.collection('posts').doc(postId).delete();
+    console.log(`Post with ID ${postId} deleted successfully from Firestore.`);
 
-    if (info.changes > 0) {
-      revalidatePath('/'); // 홈 페이지 캐시 무효화
-      return { success: true };
-    } else {
-      // 해당 ID의 포스트가 없을 수도 있음
-      return { error: '삭제할 포스트를 찾지 못했거나 이미 삭제되었습니다.' };
-    }
+    revalidatePath('/'); // 홈 페이지 캐시 무효화
+    revalidatePath('/manage'); // 관리 페이지 캐시 무효화 추가
+    return { success: true };
+
   } catch (error) {
-    console.error("Failed to delete post:", error);
-    return { error: '글 삭제 중 데이터베이스 오류가 발생했습니다.' };
+    console.error("Failed to delete post from Firestore:", error);
+    // Firestore 오류는 더 구체적인 정보를 제공할 수 있음
+    return { error: '글 삭제 중 오류가 발생했습니다.' };
   }
 }
 
-// 모든 게시글 목록을 가져오는 Server Action
+// 모든 게시글 목록을 가져오는 Server Action (Firestore 버전)
 export async function getPostsAction() {
   try {
-    const stmt = db.prepare('SELECT id, title, content, createdAt FROM posts ORDER BY createdAt DESC');
-    // Post 타입 임포트 필요 (만약 db.ts에 정의되어 있다면 거기서 가져오기)
-    // import type { Post } from '@/lib/db';
-    // 이 파일 상단에 임포트 추가 필요
-    const posts = stmt.all() as any[]; // 타입을 any로 우선 처리, 실제 Post 타입 사용 권장
+    const postsSnapshot = await db.collection('posts').orderBy('createdAt', 'desc').get();
+    const posts = postsSnapshot.docs.map(doc => ({
+      id: doc.id, // Firestore 문서 ID 사용
+      ...doc.data(),
+      // Firestore Timestamp를 Date 객체나 문자열로 변환 (필요시)
+      createdAt: doc.data().createdAt?.toDate ? doc.data().createdAt.toDate().toISOString() : doc.data().createdAt,
+    })) as any[]; // 실제 Post 타입 정의 사용 권장
+
     return { success: true, posts };
   } catch (error) {
-    console.error("Failed to fetch posts:", error);
+    console.error("Failed to fetch posts from Firestore:", error);
     return { success: false, error: '게시글 목록을 가져오는 중 오류가 발생했습니다.', posts: [] };
   }
 }
 
-// 여러 게시글을 삭제하는 Server Action
-export async function deleteMultiplePosts(postIds: number[]) {
+// 여러 게시글을 삭제하는 Server Action (Firestore 버전)
+export async function deleteMultiplePosts(postIds: string[]) { // ID 타입을 string으로 변경
   if (!postIds || postIds.length === 0) {
     return { error: '삭제할 게시글 ID가 제공되지 않았습니다.' };
   }
 
-  // 모든 ID가 유효한 숫자인지 확인
-  if (postIds.some(id => typeof id !== 'number' || isNaN(id))) {
-    return { error: '유효하지 않은 게시글 ID가 포함되어 있습니다.' };
-  }
-
-  // SQLite는 배열 파라미터를 직접 지원하지 않으므로 IN (?, ?, ...) 형태로 만들어야 함
-  const placeholders = postIds.map(() => '?').join(', ');
-  const sql = `DELETE FROM posts WHERE id IN (${placeholders})`;
+  // Firestore Batch Write 사용
+  const batch = db.batch();
+  postIds.forEach(id => {
+    if (typeof id !== 'string' || id.trim() === '') {
+       // 유효하지 않은 ID는 건너뛰거나 오류 처리
+       console.warn(`Invalid post ID skipped: ${id}`);
+       return; // 또는 여기서 오류 반환
+    }
+    const docRef = db.collection('posts').doc(id);
+    batch.delete(docRef);
+  });
 
   try {
-    const stmt = db.prepare(sql);
-    const info = stmt.run(...postIds); // 배열 요소를 인자로 전달
+    await batch.commit(); // 배치 작업 실행
+    const deletedCount = postIds.length; // 성공적으로 삭제 요청한 수 (실제 삭제된 수는 다를 수 있음)
 
-    if (info.changes > 0) {
-      revalidatePath('/'); // 홈 페이지 캐시 무효화
-      revalidatePath('/manage'); // 관리 페이지 캐시 무효화
-      return { success: true, deletedCount: info.changes };
-    } else {
-      return { error: '삭제할 포스트를 찾지 못했거나 이미 삭제되었습니다.', deletedCount: 0 };
-    }
+    revalidatePath('/');
+    revalidatePath('/manage');
+    return { success: true, deletedCount };
   } catch (error) {
-    console.error("Failed to delete multiple posts:", error);
-    return { error: '글 삭제 중 데이터베이스 오류가 발생했습니다.' };
+    console.error("Failed to delete multiple posts from Firestore:", error);
+    return { error: '여러 글 삭제 중 오류가 발생했습니다.' };
   }
 }
 
-// 비밀번호 변경 Server Action
+// 비밀번호 변경 Server Action (Firestore 버전)
 interface ChangePasswordArgs {
   currentPassword?: string;
   newPassword?: string;
@@ -96,19 +99,22 @@ export async function changePassword({
   }
 
   try {
-    // 1. 현재 비밀번호 확인 (DB 값과 직접 비교)
-    const stmt = db.prepare('SELECT value FROM settings WHERE key = ?');
-    const setting = stmt.get('admin_password') as { value: string } | undefined;
+    // 1. 현재 비밀번호 확인 (Firestore 사용)
+    const docRef = db.doc('settings/admin_password');
+    const docSnap = await docRef.get();
 
-    if (!setting || !setting.value) {
+    if (!docSnap.exists) {
       return { success: false, error: '관리자 비밀번호 설정을 찾을 수 없습니다.' };
     }
 
-    const storedPassword = setting.value;
+    const storedHash = docSnap.data()?.value;
+    if (!storedHash) {
+      return { success: false, error: '저장된 비밀번호 데이터를 찾을 수 없습니다.' };
+    }
 
-    // 현재 비밀번호가 DB 값과 일치하는지 확인 (bcrypt 비교 제거)
-    if (currentPassword !== storedPassword) {
-      // 초기 '0000' 상태이거나, 이미 해싱된 비밀번호가 틀린 경우
+    // bcrypt.compare로 현재 비밀번호와 저장된 해시 비교
+    const isMatch = await bcrypt.compare(currentPassword, storedHash);
+    if (!isMatch) {
       return { success: false, error: '현재 비밀번호가 일치하지 않습니다.' };
     }
 
@@ -119,19 +125,14 @@ export async function changePassword({
     const saltRounds = 10;
     const newHashedPassword = await bcrypt.hash(newPassword, saltRounds);
 
-    // 3. 데이터베이스 업데이트 (새 해시된 비밀번호 저장)
-    const updateStmt = db.prepare('UPDATE settings SET value = ? WHERE key = ?');
-    const info = updateStmt.run(newHashedPassword, 'admin_password');
+    // 3. Firestore 업데이트 (새 해시된 비밀번호 저장)
+    await docRef.update({ value: newHashedPassword });
 
-    if (info.changes > 0) {
-      console.log('Admin password updated successfully.');
-      return { success: true };
-    } else {
-      return { success: false, error: '데이터베이스 업데이트에 실패했습니다.' };
-    }
+    console.log('Admin password updated successfully in Firestore.');
+    return { success: true };
 
   } catch (error) {
-    console.error("Password change error:", error);
+    console.error("Password change error in Firestore:", error);
     return { success: false, error: '비밀번호 변경 중 오류가 발생했습니다.' };
   }
 } 

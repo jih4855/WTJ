@@ -40,7 +40,7 @@ export default function Home() {
       <Navbar />
       <div className="container mx-auto px-4 pb-8">
         {/* 제목 - 일반 h1 태그로 복원 */}
-        <h1 className="text-3xl font-semibold mb-10">최근 글</h1> 
+        {/* <h1 className="text-3xl font-semibold mb-10">최근 글</h1> */}
         
         {/* 목록 영역 - 항상 표시 */}
         <div className="mt-4"> 

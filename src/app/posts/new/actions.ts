@@ -1,7 +1,8 @@
 'use server'; // 이 파일의 함수들은 서버에서만 실행됨을 명시
 
-import db from '@/lib/db'; // db 객체 임포트 경로 수정
-// import { posts } from '@/lib/schema'; // 스키마 임포트 제거
+// Firebase db 객체 및 Firestore FieldValue 임포트
+import { db } from '@/lib/firebase'; // Firebase 초기화 파일 경로
+import { FieldValue } from 'firebase-admin/firestore'; // FieldValue 임포트 (serverTimestamp용)
 import { revalidatePath } from 'next/cache'; // 캐시 무효화를 위한 함수
 import bcrypt from 'bcrypt'; // bcrypt 임포트 확인
 
@@ -16,64 +17,68 @@ export async function createPost(formData: FormData) {
     return { success: false, error: '제목과 내용은 필수 입력 항목입니다.' };
   }
 
-  // 관리자 인증 로직은 여기서 제거되었습니다.
-
   try {
-    // 데이터베이스에 게시글 삽입 (better-sqlite3 사용)
-    const stmt = db.prepare('INSERT INTO posts (title, content, createdAt) VALUES (?, ?, ?)');
-    const info = stmt.run(title, content, new Date().toISOString()); // createdAt 추가
+    // Firestore 'posts' 컬렉션에 새 문서 추가 (db.collection().add() 사용)
+    const docRef = await db.collection('posts').add({
+      title: title,
+      content: content,
+      createdAt: FieldValue.serverTimestamp() // FieldValue 사용
+    });
 
-    if (info.changes > 0) {
-      // 캐시 무효화
+    // 문서 추가 성공 확인 (add는 성공 시 DocumentReference 반환)
+    if (docRef.id) {
       revalidatePath('/posts');
       revalidatePath('/manage');
-      // lastInsertRowid 대신 success만 반환하도록 수정
-      return { success: true }; 
+      return { success: true };
     } else {
+      // Firestore 에러는 보통 catch 블록에서 처리됨
       return { success: false, error: '글을 데이터베이스에 저장하지 못했습니다.' };
     }
 
   } catch (error) {
-    console.error('Error creating post:', error);
+    console.error('Error creating post in Firestore:', error);
     return { success: false, error: '게시글 생성 중 오류가 발생했습니다.' };
   }
 }
 
 // 관리자 인증 함수
 export async function authenticateAdmin(password: string): Promise<{ success: boolean; error?: string }> {
-  // const storedPasswordHash = process.env.ADMIN_PASSWORD_HASH; // 환경 변수 사용 안 함
-  // const plainPassword = process.env.ADMIN_PASSWORD; // 환경 변수 사용 안 함
-
-  // settings 테이블에서 저장된 비밀번호 (해시값) 가져오기
   let storedValue: string | undefined;
   try {
-    const stmt = db.prepare('SELECT value FROM settings WHERE key = ?');
-    const setting = stmt.get('admin_password') as { value: string } | undefined;
-    if (setting) {
-      storedValue = setting.value;
+    // Firestore 'settings' 컬렉션에서 'admin_password' 문서 가져오기 (db.doc().get() 사용)
+    const docRef = db.doc('settings/admin_password'); // 경로 직접 지정
+    const docSnap = await docRef.get(); // get() 메서드 사용
+
+    if (docSnap.exists) { // exists는 속성(property)
+      // 문서 데이터에서 'value' 필드 값(해시된 비밀번호) 가져오기
+      storedValue = docSnap.data()?.value; // Optional chaining 사용
+    } else {
+      // Firestore에 해당 문서가 없는 경우
+      console.error("Admin password document ('settings/admin_password') not found in Firestore.");
+      return { success: false, error: '서버 설정 오류. 비밀번호가 초기화되지 않았습니다.' };
     }
   } catch (dbError) {
-    console.error('Error fetching admin password from DB:', dbError);
-    return { success: false, error: 'Server configuration error.' };
+    console.error('Error fetching admin password from Firestore:', dbError);
+    return { success: false, error: '서버 설정 오류.' };
   }
 
+  // storedValue가 없는 경우 (문서는 존재하지만 value 필드가 없는 경우 등)
   if (!storedValue) {
-    console.error('Admin password not found in settings table.');
-    return { success: false, error: 'Server configuration error. Password not initialized.' }; 
+    console.error('Admin password value not found in the document.');
+    return { success: false, error: '서버 설정 오류. 비밀번호 데이터가 누락되었습니다.' };
   }
 
-  // 비밀번호 비교: 입력된 비밀번호와 DB에 저장된 해시값을 bcrypt.compare로 비교
   try {
+    // 입력된 비밀번호와 Firestore에 저장된 해시값 비교
     const passwordMatch = await bcrypt.compare(password, storedValue);
-    
+
     if (passwordMatch) {
-      return { success: true };
+      return { success: true }; // 인증 성공
     } else {
-      return { success: false, error: 'Incorrect password.' }; // 비밀번호 불일치
+      return { success: false, error: '비밀번호가 일치하지 않습니다.' }; // 비밀번호 불일치
     }
   } catch (compareError) {
     console.error('Error comparing password hash:', compareError);
-    // bcrypt.compare 자체에서 오류 발생 시
-    return { success: false, error: 'Authentication error during comparison.' }; 
+    return { success: false, error: '인증 중 오류가 발생했습니다.' };
   }
 } 
