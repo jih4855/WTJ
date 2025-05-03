@@ -1,4 +1,10 @@
 import Link from 'next/link';
+import VisitorCounter from './VisitorCounter';
+// lucide-react에서 Cog 아이콘 import
+import { Cog } from 'lucide-react';
+
+// SVG 아이콘 정의 제거
+// const CogIcon = () => ( ... );
 
 export default function Navbar() {
   return (
@@ -7,10 +13,11 @@ export default function Navbar() {
         <Link href="/" className="hover:text-neutral-300 transition-colors text-2xl font-bold">
           내 블로그
         </Link>
-        <div className="flex items-center space-x-2">
-          <span className="text-lg">⚙️</span>
-          <Link href="/manage" className="hover:text-neutral-300 transition-colors">
-            관리
+        <div className="flex items-center space-x-4">
+          <VisitorCounter />
+          <Link href="/manage" className="flex items-center space-x-1 hover:text-neutral-300 transition-colors">
+            <Cog size={18} />
+            <span>관리</span>
           </Link>
         </div>
       </div>

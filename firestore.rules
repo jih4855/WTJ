@@ -2,8 +2,44 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if true;  // 임시로 모든 접근 허용
+
+    // posts 컬렉션:
+    // - 읽기: 모든 사용자 허용 (블로그 게시글은 공개되어야 함)
+    // - 쓰기/삭제: 클라이언트에서 직접 불가능 (서버 액션을 통해서만 가능)
+    match /posts/{postId} {
+      allow read: if true;
+      allow write: if false; // 생성, 업데이트, 삭제 모두 클라이언트에서 직접 불가
     }
+
+    // settings 컬렉션 (및 그 안의 모든 문서):
+    // - 읽기/쓰기/삭제: 클라이언트에서 직접 접근 절대 불가
+    // 모든 설정 관련 작업은 인증된 서버 액션을 통해서만 수행
+    match /settings/{settingId} {
+      allow read, write: if false;
+    }
+
+    // 방문자 수 카운터 (metrics 컬렉션)
+    match /metrics/pageViews {
+      // 읽기: 인증된 사용자만 허용 (예시)
+      // 또는 관리자 페이지 등에서만 보여줄 경우 false로 설정 후 서버에서 읽기
+      // allow read: if request.auth != null;
+      // 읽기: 모든 사용자 허용
+      allow read: if true;
+
+      // 쓰기(업데이트): 모든 사용자가 'total' 필드를 1씩 증가시키는 것만 허용
+      // 주의: 이 규칙은 누구나 증가 요청을 보낼 수 있음을 의미합니다.
+      //      악의적인 대량 요청 가능성은 있으나, 일반적인 방문 카운팅 목적에는 충분할 수 있습니다.
+      allow update: if request.resource.data.total == resource.data.total + 1;
+
+      // 생성: 초기에 문서가 없을 때 생성하는 것을 허용 (total: 1로 시작)
+      // 주의: 이 규칙도 누구나 초기 카운터를 생성할 수 있게 합니다.
+      //      더 안전하게 하려면 서버에서 초기 문서를 미리 생성하는 것이 좋습니다.
+      allow create: if request.resource.data.total == 1;
+
+      // 삭제: 허용 안 함
+      allow delete: if false;
+    }
+
+    // 다른 컬렉션이 있다면 여기에 규칙 추가...
   }
 }

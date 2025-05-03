@@ -6,14 +6,14 @@ import type { Post } from '@/lib/db'; // Post 타입 가져오기
 interface InteractivePostListProps {
   initialPosts: Post[];
   isDeleteMode?: boolean; // 삭제 모드 여부 prop 추가
-  checkedPostIds?: Set<number>; // 체크된 게시글 ID Set prop 추가
-  onCheckboxChange?: (postId: number, isChecked: boolean) => void; // 체크박스 변경 핸들러 prop 추가
+  checkedPostIds?: Set<string>; // 체크된 게시글 ID Set prop 추가
+  onCheckboxChange?: (postId: string, isChecked: boolean) => void; // 체크박스 변경 핸들러 prop 추가
 }
 
 export default function InteractivePostList({
   initialPosts,
   isDeleteMode = false, // 기본값 false
-  checkedPostIds = new Set(), // 기본값 빈 Set
+  checkedPostIds = new Set<string>(), // 기본값 빈 Set
   onCheckboxChange = () => {},
 }: InteractivePostListProps) {
   // initialPosts가 변경될 때만 posts 상태 업데이트 (선택적 최적화)
@@ -22,9 +22,9 @@ export default function InteractivePostList({
     setPosts(initialPosts);
   }, [initialPosts]);
 
-  const [expandedPostId, setExpandedPostId] = useState<number | null>(null);
+  const [expandedPostId, setExpandedPostId] = useState<string | null>(null);
 
-  const handleTitleClick = (postId: number) => {
+  const handleTitleClick = (postId: string) => {
     setExpandedPostId(currentId => (currentId === postId ? null : postId));
   };
 

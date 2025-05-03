@@ -4,6 +4,7 @@
 import { db } from '@/lib/firebase'; // Firestore db 임포트 추가
 import { revalidatePath } from 'next/cache';
 import bcrypt from 'bcrypt';
+import type { Post } from '@/lib/db'; // Post 타입 임포트 추가
 
 // 글 삭제 Server Action (Firestore 버전으로 수정 필요할 수 있음 - 여기서는 일단 유지)
 export async function deletePost(formData: FormData) {
@@ -45,7 +46,7 @@ export async function getPostsAction() {
       ...doc.data(),
       // Firestore Timestamp를 Date 객체나 문자열로 변환 (필요시)
       createdAt: doc.data().createdAt?.toDate ? doc.data().createdAt.toDate().toISOString() : doc.data().createdAt,
-    })) as any[]; // 실제 Post 타입 정의 사용 권장
+    })) as Post[]; // 타입을 Post[]로 명시
 
     return { success: true, posts };
   } catch (error) {
