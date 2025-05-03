@@ -15,8 +15,8 @@ interface ManageClientProps {
   authenticateAdminAction: (password: string) => Promise<{ success: boolean; error?: string }>;
   getPostsAction: () => Promise<{ success: boolean; posts?: Post[]; error?: string }>;
   deleteMultiplePostsAction: (postIds: string[]) => Promise<
-    { success: true; deletedCount: number; error?: undefined } |
-    { success: false; deletedCount?: undefined; error: string }
+    { success: boolean; deletedCount: number; error?: undefined } |
+    { success?: false; error: string; deletedCount?: undefined }
   >;
   changePasswordAction: (passwords: { currentPassword: string; newPassword: string }) => Promise<{ success: boolean; error?: string }>;
   createPostAction: (formData: FormData) => Promise<{ success: boolean; error?: string }>;

@@ -6,7 +6,6 @@ import Navbar from './components/Navbar';
 import type { Post } from '@/lib/db';
 import InteractivePostList from './components/InteractivePostList'; // 이 컴포넌트가 클라이언트 인터랙션을 담당한다고 가정
 import { getPostsAction } from '@/app/actions';
-import VisitorCounter from './components/VisitorCounter'; // VisitorCounter 임포트 유지
 import type { Metadata } from "next"; // Metadata 타입 임포트
 
 // Metadata 정의 추가 (layout.tsx에서 가져옴)
