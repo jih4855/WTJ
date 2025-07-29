@@ -7,8 +7,8 @@ layout: default
   const baseUrl = '{{ site.baseurl }}';
   const currentPath = window.location.pathname;
   
-  if (currentPath === baseUrl + '/' || currentPath === '/') {
-    window.location.href = baseUrl + '/en/';
+  if (currentPath === baseUrl + '/' || currentPath === '/' || currentPath.endsWith('/WTJ')) {
+    window.location.replace(baseUrl + '/en/');
   }
 </script>
 
