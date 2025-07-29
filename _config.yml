@@ -7,8 +7,8 @@ description: >-
 baseurl: ""
 url: "https://jih4855.github.io/WTJ"
 
-# 다국어 설정
-languages: ["en", "ja"]
+# 다국어 설정 (로컬에서는 한국어 포함)
+languages: ["ko", "en", "ja"]
 default_lang: "en"
 
 # 빌드 설정
@@ -26,8 +26,6 @@ exclude:
   - vendor/gems/
   - vendor/ruby/
   - private/
-  - _posts/ko/
-  - ko/
 
 # 플러그인
 plugins:

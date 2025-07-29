@@ -14,13 +14,15 @@ description: 地元の視点から韓国の隠れた宝石を発見
   {% for post in site.posts %}
     {% if post.categories contains 'ja' %}
       <article class="post-card">
-        <div class="post-content">
-          <h2><a href="{{ post.url | relative_url }}" class="post-title">{{ post.title | escape }}</a></h2>
-          <p class="post-excerpt">{{ post.excerpt | strip_html | truncatewords: 30 }}</p>
-          <div class="post-meta">
-            <span class="post-date">{{ post.date | date: "%Y年%m月%d日" }}</span>
+        <a href="{{ post.url | relative_url }}" class="post-card-link">
+          <div class="post-content">
+            <h2 class="post-title">{{ post.title | escape }}</h2>
+            <p class="post-excerpt">{{ post.excerpt | strip_html | truncatewords: 30 }}</p>
+            <div class="post-meta">
+              <span class="post-date">{{ post.date | date: "%Y年%m月%d日" }}</span>
+            </div>
           </div>
-        </div>
+        </a>
       </article>
     {% endif %}
   {% endfor %}

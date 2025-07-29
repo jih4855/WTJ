@@ -142,6 +142,10 @@ body {
   
   .mobile-menu {
     display: none;
+    
+    &.active {
+      display: block;
+    }
   }
   
   @media (max-width: $tablet) {
@@ -277,6 +281,20 @@ body {
   &:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px $shadow-color;
+    
+    .post-title {
+      color: $primary-color;
+    }
+  }
+  
+  .post-card-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    
+    &:hover {
+      text-decoration: none;
+    }
   }
   
   .post-content {
@@ -287,11 +305,7 @@ body {
       font-weight: 600;
       color: $text-color;
       margin-bottom: 0.5rem;
-      text-decoration: none;
       
-      &:hover {
-        color: $primary-color;
-      }
     }
     
     .post-excerpt {

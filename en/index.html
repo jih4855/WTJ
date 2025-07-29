@@ -14,13 +14,15 @@ description: Discover Korea's hidden gems through the eyes of a local
   {% for post in site.posts %}
     {% if post.categories contains 'en' %}
       <article class="post-card">
-        <div class="post-content">
-          <h2><a href="{{ post.url | relative_url }}" class="post-title">{{ post.title | escape }}</a></h2>
-          <p class="post-excerpt">{{ post.excerpt | strip_html | truncatewords: 30 }}</p>
-          <div class="post-meta">
-            <span class="post-date">{{ post.date | date: "%B %d, %Y" }}</span>
+        <a href="{{ post.url | relative_url }}" class="post-card-link">
+          <div class="post-content">
+            <h2 class="post-title">{{ post.title | escape }}</h2>
+            <p class="post-excerpt">{{ post.excerpt | strip_html | truncatewords: 30 }}</p>
+            <div class="post-meta">
+              <span class="post-date">{{ post.date | date: "%B %d, %Y" }}</span>
+            </div>
           </div>
-        </div>
+        </a>
       </article>
     {% endif %}
   {% endfor %}
