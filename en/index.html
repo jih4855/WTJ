@@ -1,0 +1,27 @@
+---
+layout: default
+lang: en
+title: Welcome to Jinju
+description: Discover Korea's hidden gems through the eyes of a local
+---
+
+<div class="hero">
+  <h1>Welcome to Jinju</h1>
+  <p>Discover Korea's hidden gems through the eyes of a local office worker exploring Jinju and Gyeongnam province.</p>
+</div>
+
+<div class="post-list">
+  {% for post in site.posts %}
+    {% if post.categories contains 'en' %}
+      <article class="post-card">
+        <div class="post-content">
+          <h2><a href="{{ post.url | relative_url }}" class="post-title">{{ post.title | escape }}</a></h2>
+          <p class="post-excerpt">{{ post.excerpt | strip_html | truncatewords: 30 }}</p>
+          <div class="post-meta">
+            <span class="post-date">{{ post.date | date: "%B %d, %Y" }}</span>
+          </div>
+        </div>
+      </article>
+    {% endif %}
+  {% endfor %}
+</div>

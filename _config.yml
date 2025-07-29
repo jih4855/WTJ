@@ -1,0 +1,59 @@
+# Jekyll 설정
+title: "Welcome to Jinju"
+email: your-email@example.com
+description: >- 
+  경남 진주를 중심으로 한 개인 여행 블로그입니다.
+  30대 직장인의 시선으로 일상적인 장소들과 소소한 이야기들을 담고 있습니다.
+baseurl: ""
+url: "https://jih4855.github.io/WTJ"
+
+# 다국어 설정
+languages: ["en", "ja"]
+default_lang: "en"
+
+# 빌드 설정
+markdown: kramdown
+highlighter: rouge
+permalink: /:categories/:year/:month/:day/:title/
+
+# 제외할 파일들
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+  - private/
+  - _posts/ko/
+  - ko/
+
+# 플러그인
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+# 페이지네이션
+paginate: 5
+paginate_path: "/page:num/"
+
+# SEO
+lang: en
+author: Jinju Travel Guide
+twitter:
+  username: your_twitter_username
+  card: summary_large_image
+
+# 기본값
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+  - scope:
+      path: ""
+    values:
+      layout: "default"

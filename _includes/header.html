@@ -1,0 +1,73 @@
+<header class="header">
+  <div class="container">
+    <div class="header-content">
+      <h1 class="logo">
+        {% if page.lang == 'ja' %}
+          <a href="/ja/">{{ site.title }}</a>
+        {% else %}
+          <a href="/en/">{{ site.title }}</a>
+        {% endif %}
+      </h1>
+      
+      <nav class="nav">
+        <div class="language-selector">
+          {% if page.layout == 'post' %}
+            {% comment %} 포스트에서는 각 언어의 홈으로 이동 {% endcomment %}
+            {% assign current_page = '/' %}
+          {% else %}
+            {% assign current_page = page.url | remove: '/en/' | remove: '/ja/' %}
+            {% if current_page == '' %}{% assign current_page = '/' %}{% endif %}
+          {% endif %}
+          {% if page.lang == 'ja' %}
+            <a href="/en{{ current_page }}" class="lang-btn">English</a>
+            <a href="/ja{{ current_page }}" class="lang-btn active">日本語</a>
+          {% else %}
+            <a href="/en{{ current_page }}" class="lang-btn active">English</a>
+            <a href="/ja{{ current_page }}" class="lang-btn">日本語</a>
+          {% endif %}
+        </div>
+        
+        <!-- Navigation menu -->
+        <div class="nav-menu">
+          {% if page.lang == 'ja' %}
+            <a href="/ja/" class="nav-link">ホーム</a>
+            <a href="/ja/about/" class="nav-link">紹介・お問い合わせ</a>
+          {% else %}
+            <a href="/en/" class="nav-link">Home</a>
+            <a href="/en/about/" class="nav-link">About & Contact</a>
+          {% endif %}
+        </div>
+        
+        <!-- Mobile menu toggle -->
+        <button class="mobile-menu-toggle" aria-label="Toggle menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </nav>
+    </div>
+  </div>
+  
+  <!-- Mobile menu -->
+  <div class="mobile-menu">
+    <div class="mobile-menu-content">
+      {% if page.lang == 'ja' %}
+        <a href="/ja/" class="mobile-nav-link">ホーム</a>
+        <a href="/ja/about/" class="mobile-nav-link">紹介・お問い合わせ</a>
+      {% else %}
+        <a href="/en/" class="mobile-nav-link">Home</a>
+        <a href="/en/about/" class="mobile-nav-link">About & Contact</a>
+      {% endif %}
+      
+      <div class="mobile-language-selector">
+        {% if page.lang == 'ja' %}
+          <a href="/en{{ current_page }}" class="mobile-lang-btn">English</a>
+          <a href="/ja{{ current_page }}" class="mobile-lang-btn active">日本語</a>
+        {% else %}
+          <a href="/en{{ current_page }}" class="mobile-lang-btn active">English</a>
+          <a href="/ja{{ current_page }}" class="mobile-lang-btn">日本語</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</header>

@@ -1,0 +1,19 @@
+---
+layout: default
+---
+
+<script>
+  // 기본 언어로 리다이렉트
+  if (window.location.pathname === '/') {
+    window.location.href = '/en/';
+  }
+</script>
+
+<div class="hero">
+  <h1>Welcome to Jinju</h1>
+  <p>Please select your language:</p>
+  <div style="margin-top: 2rem;">
+    <a href="/en/" style="margin-right: 1rem; padding: 0.75rem 1.5rem; background: #2563eb; color: white; text-decoration: none; border-radius: 0.375rem;">English</a>
+    <a href="/ja/" style="padding: 0.75rem 1.5rem; background: #2563eb; color: white; text-decoration: none; border-radius: 0.375rem;">日本語</a>
+  </div>
+</div>
