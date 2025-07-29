@@ -4,8 +4,8 @@ email: your-email@example.com
 description: >- 
   경남 진주를 중심으로 한 개인 여행 블로그입니다.
   30대 직장인의 시선으로 일상적인 장소들과 소소한 이야기들을 담고 있습니다.
-baseurl: ""
-url: "https://jih4855.github.io/WTJ"
+baseurl: "/WTJ"
+url: "https://jih4855.github.io"
 
 # 다국어 설정 (로컬에서는 한국어 포함)
 languages: ["ko", "en", "ja"]
