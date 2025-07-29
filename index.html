@@ -4,8 +4,11 @@ layout: default
 
 <script>
   // 기본 언어로 리다이렉트
-  if (window.location.pathname === '/') {
-    window.location.href = '/ko/';
+  const baseUrl = '{{ site.baseurl }}';
+  const currentPath = window.location.pathname;
+  
+  if (currentPath === baseUrl + '/' || currentPath === '/') {
+    window.location.href = baseUrl + '/ko/';
   }
 </script>
 
