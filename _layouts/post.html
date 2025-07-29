@@ -2,26 +2,122 @@
 layout: default
 ---
 
-<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+<div class="post-wrapper">
+  <div class="container">
+    <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
 
-  <header class="post-header">
-    <h1 class="post-title" itemprop="name headline">{{ page.title | escape }}</h1>
-    <p class="post-meta">
-      <time datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">
-        {% assign date_format = site.date_format | default: "%b %-d, %Y" %}
-        {{ page.date | date: date_format }}
-      </time>
-      {% if page.author %}
-        • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">{{ page.author }}</span></span>
+      <!-- 포스트 헤더 -->
+      <header class="post-header">
+        <!-- 카테고리 및 메타 정보 -->
+        <div class="post-meta-top">
+          {% if page.categories %}
+          <div class="post-categories">
+            {% for category in page.categories %}
+            <span class="category-tag">{{ category }}</span>
+            {% endfor %}
+          </div>
+          {% endif %}
+
+          <div class="post-reading-info">
+            {% assign words = content | number_of_words %}
+            {% assign reading_time = words | divided_by: 200 %}
+            {% if page.lang == 'ko' %}
+            {% if reading_time < 1 %} <span class="reading-time">1분 읽기</span>
+              {% else %}
+              <span class="reading-time">{{ reading_time }}분 읽기</span>
+              {% endif %}
+              {% elsif page.lang == 'ja' %}
+              {% if reading_time < 1 %} <span class="reading-time">1分で読める</span>
+                {% else %}
+                <span class="reading-time">{{ reading_time }}分で読める</span>
+                {% endif %}
+                {% else %}
+                {% if reading_time < 1 %} <span class="reading-time">1 min read</span>
+                  {% else %}
+                  <span class="reading-time">{{ reading_time }} min read</span>
+                  {% endif %}
+                  {% endif %}
+          </div>
+        </div>
+
+        <!-- 제목 -->
+        <h1 class="post-title" itemprop="name headline">{{ page.title | escape }}</h1>
+
+        <!-- 날짜 및 작성자 정보 -->
+        <div class="post-meta">
+          <time datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">
+            {% if page.lang == 'ko' %}
+            {{ page.date | date: "%Y년 %m월 %d일" }}
+            {% elsif page.lang == 'ja' %}
+            {{ page.date | date: "%Y年%m月%d日" }}
+            {% else %}
+            {{ page.date | date: "%B %d, %Y" }}
+            {% endif %}
+          </time>
+          {% if page.author %}
+          <span class="author">
+            <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+              <span itemprop="name">{{ page.author }}</span>
+            </span>
+          </span>
+          {% endif %}
+        </div>
+      </header>
+
+      <!-- 포스트 내용 -->
+      <div class="post-content" itemprop="articleBody">
+        {{ content }}
+      </div>
+
+      <!-- 포스트 푸터 -->
+      <footer class="post-footer">
+        {% if page.tags %}
+        <div class="post-tags">
+          <span class="tags-label">
+            {% if page.lang == 'ko' %}태그:{% elsif page.lang == 'ja' %}タグ:{% else %}Tags:{% endif %}
+          </span>
+          {% for tag in page.tags %}
+          <span class="tag">{{ tag }}</span>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- 네비게이션 (같은 언어 포스트만) -->
+        <div class="post-navigation">
+          {% assign prev_post = nil %}
+          {% assign next_post = nil %}
+          {% assign same_lang_posts = site.posts | where: "lang", page.lang %}
+
+          {% for post in same_lang_posts %}
+          {% if post.date < page.date and prev_post==nil %} {% assign prev_post=post %} {% endif %} {% endfor %} {% for
+            post in same_lang_posts reversed %} {% if post.date> page.date and next_post == nil %}
+            {% assign next_post = post %}
+            {% endif %}
+            {% endfor %}
+
+            {% if prev_post %}
+            <a href="{{ prev_post.url | relative_url }}" class="nav-previous">
+              <span class="nav-label">
+                {% if page.lang == 'ko' %}이전 글{% elsif page.lang == 'ja' %}前の記事{% else %}Previous{% endif %}
+              </span>
+              <span class="nav-title">{{ prev_post.title }}</span>
+            </a>
+            {% endif %}
+
+            {% if next_post %}
+            <a href="{{ next_post.url | relative_url }}" class="nav-next">
+              <span class="nav-label">
+                {% if page.lang == 'ko' %}다음 글{% elsif page.lang == 'ja' %}次の記事{% else %}Next{% endif %}
+              </span>
+              <span class="nav-title">{{ next_post.title }}</span>
+            </a>
+            {% endif %}
+        </div>
+      </footer>
+
+      {% if site.disqus.shortname %}
+      {% include disqus_comments.html %}
       {% endif %}
-    </p>
-  </header>
-
-  <div class="post-content" itemprop="articleBody">
-    {{ content }}
+    </article>
   </div>
-
-  {% if site.disqus.shortname %}
-    {% include disqus_comments.html %}
-  {% endif %}
-</article>
+</div>

@@ -4,15 +4,9 @@ _site/
 .jekyll-cache/
 .jekyll-metadata
 
-# 한국어 원본 (비공개)
-_posts/ko/
-ko/
-private/
-
 # 개발 및 임시 파일들
 .bundle/
 vendor/
-Gemfile.lock
 .DS_Store
 Thumbs.db
 
@@ -46,3 +40,6 @@ yarn-error-log*
 .firebase/
 firebase.json
 .firebaserc
+
+# 한국어 폴더 제외 (로컬 개발용)
+ko/

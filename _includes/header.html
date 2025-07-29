@@ -1,86 +1,43 @@
 <header class="header">
   <div class="container">
     <div class="header-content">
-      <h1 class="logo">
+      <div class="logo">
         {% if page.lang == 'ko' %}
-          <a href="/ko/">{{ site.title }}</a>
+          <a href="{{ '/ko/' | relative_url }}">{{ site.title | default: "Jinju Blog" }}</a>
+        {% elsif page.lang == 'en' %}
+          <a href="{{ '/en/' | relative_url }}">{{ site.title | default: "Jinju Blog" }}</a>
         {% elsif page.lang == 'ja' %}
-          <a href="/ja/">{{ site.title }}</a>
+          <a href="{{ '/ja/' | relative_url }}">{{ site.title | default: "Jinju Blog" }}</a>
         {% else %}
-          <a href="/en/">{{ site.title }}</a>
-        {% endif %}
-      </h1>
-      
-      <nav class="nav">
-        <div class="language-selector">
-          {% if page.lang == 'ko' %}
-            <a href="/ko/" class="lang-btn active">한국어</a>
-            <a href="/en/" class="lang-btn">English</a>
-            <a href="/ja/" class="lang-btn">日本語</a>
-          {% elsif page.lang == 'ja' %}
-            <a href="/ko/" class="lang-btn">한국어</a>
-            <a href="/en/" class="lang-btn">English</a>
-            <a href="/ja/" class="lang-btn active">日本語</a>
-          {% else %}
-            <a href="/ko/" class="lang-btn">한국어</a>
-            <a href="/en/" class="lang-btn active">English</a>
-            <a href="/ja/" class="lang-btn">日本語</a>
-          {% endif %}
-        </div>
-        
-        <!-- Navigation menu -->
-        <div class="nav-menu">
-          {% if page.lang == 'ko' %}
-            <a href="/ko/" class="nav-link">홈</a>
-            <a href="/ko/about/" class="nav-link">소개 & 연락처</a>
-          {% elsif page.lang == 'ja' %}
-            <a href="/ja/" class="nav-link">ホーム</a>
-            <a href="/ja/about/" class="nav-link">紹介・お問い合わせ</a>
-          {% else %}
-            <a href="/en/" class="nav-link">Home</a>
-            <a href="/en/about/" class="nav-link">About & Contact</a>
-          {% endif %}
-        </div>
-        
-        <!-- Mobile menu toggle -->
-        <button class="mobile-menu-toggle" aria-label="Toggle menu">
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
-      </nav>
-    </div>
-  </div>
-  
-  <!-- Mobile menu -->
-  <div class="mobile-menu">
-    <div class="mobile-menu-content">
-      {% if page.lang == 'ko' %}
-        <a href="/ko/" class="mobile-nav-link">홈</a>
-        <a href="/ko/about/" class="mobile-nav-link">소개 & 연락처</a>
-      {% elsif page.lang == 'ja' %}
-        <a href="/ja/" class="mobile-nav-link">ホーム</a>
-        <a href="/ja/about/" class="mobile-nav-link">紹介・お問い合わせ</a>
-      {% else %}
-        <a href="/en/" class="mobile-nav-link">Home</a>
-        <a href="/en/about/" class="mobile-nav-link">About & Contact</a>
-      {% endif %}
-      
-      <div class="mobile-language-selector">
-        {% if page.lang == 'ko' %}
-          <a href="/ko/" class="mobile-lang-btn active">한국어</a>
-          <a href="/en/" class="mobile-lang-btn">English</a>
-          <a href="/ja/" class="mobile-lang-btn">日本語</a>
-        {% elsif page.lang == 'ja' %}
-          <a href="/ko/" class="mobile-lang-btn">한국어</a>
-          <a href="/en/" class="mobile-lang-btn">English</a>
-          <a href="/ja/" class="mobile-lang-btn active">日本語</a>
-        {% else %}
-          <a href="/ko/" class="mobile-lang-btn">한국어</a>
-          <a href="/en/" class="mobile-lang-btn active">English</a>
-          <a href="/ja/" class="mobile-lang-btn">日본語</a>
+          <a href="{{ '/' | relative_url }}">{{ site.title | default: "Jinju Blog" }}</a>
         {% endif %}
       </div>
+      <nav class="nav">
+        <ul class="nav-menu">
+          <li>
+            {% if page.lang == 'ko' %}
+              <a href="{{ '/ko/' | relative_url }}" class="nav-link">Home</a>
+            {% elsif page.lang == 'en' %}
+              <a href="{{ '/en/' | relative_url }}" class="nav-link">Home</a>
+            {% elsif page.lang == 'ja' %}
+              <a href="{{ '/ja/' | relative_url }}" class="nav-link">Home</a>
+            {% else %}
+              <a href="{{ '/' | relative_url }}" class="nav-link">Home</a>
+            {% endif %}
+          </li>
+          <li>
+            {% if page.lang == 'ko' %}
+              <a href="{{ '/ko/about/' | relative_url }}" class="nav-link">About</a>
+            {% elsif page.lang == 'en' %}
+              <a href="{{ '/en/about/' | relative_url }}" class="nav-link">About</a>
+            {% elsif page.lang == 'ja' %}
+              <a href="{{ '/ja/about/' | relative_url }}" class="nav-link">About</a>
+            {% else %}
+              <a href="{{ '/about/' | relative_url }}" class="nav-link">About</a>
+            {% endif %}
+          </li>
+        </ul>
+      </nav>
     </div>
   </div>
 </header>

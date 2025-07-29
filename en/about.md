@@ -1,10 +1,21 @@
 ---
 layout: default
-title: "About & Contact - Welcome to Jinju"
 lang: en
-description: "About our Korea travel blog and contact information"
+title: "About"
+description: "Will be updated soon"
 permalink: /en/about/
 ---
+
+<div class="page-content">
+  <div class="container">
+    <div class="hero">
+      <div class="hero-content">
+        <h1>About</h1>
+        <p>Will be updated soon.</p>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="page-header">
   <h1>About & Contact</h1>

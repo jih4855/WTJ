@@ -6,24 +6,51 @@ description: 地元の視点から韓国の隠れた宝石を発見
 ---
 
 <div class="hero">
-  <h1>Welcome to Jinju</h1>
-  <p>晋州と慶尚南道を探索する地元の会社員の目を通して、韓国の隠れた宝石を発見してください。</p>
+  <div class="hero-content">
+    <h1>Welcome to Jinju</h1>
+    <p>晋州、慶尚南道での経験を共有します。できるだけ些細なことから..</p>
+  </div>
 </div>
 
-<div class="post-list">
-  {% for post in site.posts %}
-    {% if post.categories contains 'ja' %}
-      <article class="post-card">
-        <a href="{{ post.url | relative_url }}" class="post-card-link">
-          <div class="post-content">
-            <h2 class="post-title">{{ post.title | escape }}</h2>
-            <p class="post-excerpt">{{ post.excerpt | strip_html | truncatewords: 30 }}</p>
-            <div class="post-meta">
-              <span class="post-date">{{ post.date | date: "%Y年%m月%d日" }}</span>
+<div class="posts">
+  <div class="container">
+    <div class="posts-grid">
+      {% for post in site.posts %}
+        {% if post.lang == 'ja' %}
+          <a href="{{ post.url | relative_url }}" class="post-card">
+            <div class="post-header">
+              {% if post.categories %}
+              <div class="post-categories">
+                {% for category in post.categories %}
+                  <span class="category-tag">{{ category }}</span>
+                {% endfor %}
+              </div>
+              {% endif %}
+              <div class="post-reading-time">
+                {% assign words = post.content | number_of_words %}
+                {% assign reading_time = words | divided_by: 200 %}
+                {% if reading_time < 1 %}
+                  <span>1分で読める</span>
+                {% else %}
+                  <span>{{ reading_time }}分で読める</span>
+                {% endif %}
+              </div>
             </div>
-          </div>
-        </a>
-      </article>
-    {% endif %}
-  {% endfor %}
+            <h2 class="post-title">{{ post.title | escape }}</h2>
+            <div class="post-meta">
+              <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%Y年%m月%d日" }}</time>
+            </div>
+            <div class="post-excerpt">{{ post.excerpt | strip_html | truncatewords: 30 }}</div>
+            {% if post.tags %}
+            <div class="post-tags">
+              {% for tag in post.tags %}
+                <span class="tag">{{ tag }}</span>
+              {% endfor %}
+            </div>
+            {% endif %}
+          </a>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
 </div>
