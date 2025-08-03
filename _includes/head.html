@@ -18,9 +18,41 @@
   <link rel="canonical" href="{{ page.url | replace:'index.html','' | absolute_url }}">
   <link rel="alternate" type="application/rss+xml" title="{{ site.title | escape }}" href="{{ "/feed.xml" | relative_url }}">
 
+  <!-- 언어별 hreflang 태그 -->
   {% if page.lang %}
     <link rel="alternate" hreflang="{{ page.lang }}" href="{{ page.url | absolute_url }}">
+    {% assign current_page = page.url | remove: '.html' %}
+    {% for language in site.languages %}
+      {% unless language == page.lang %}
+        {% assign translated_url = current_page | replace: '/' + page.lang + '/', '/' + language + '/' %}
+        <link rel="alternate" hreflang="{{ language }}" href="{{ translated_url | absolute_url }}">
+      {% endunless %}
+    {% endfor %}
   {% endif %}
 
+  <!-- Open Graph 추가 메타태그 -->
+  <meta property="og:site_name" content="{{ site.title }}">
+  <meta property="og:locale" content="{% if page.locale %}{{ page.locale }}{% else %}{{ site.lang | default: 'en_US' }}{% endif %}">
+  {% if page.image %}
+    <meta property="og:image" content="{{ page.image | absolute_url }}">
+  {% elsif site.image %}
+    <meta property="og:image" content="{{ site.image | absolute_url }}">
+  {% endif %}
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:site" content="@{{ site.twitter.username }}">
+  <meta name="twitter:creator" content="@{{ site.twitter.username }}">
+  
+  <!-- 추가 SEO 메타태그 -->
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  <meta name="googlebot" content="index, follow">
+  
+  {% if page.tags %}
+    <meta name="keywords" content="{{ page.tags | join: ', ' }}">
+  {% endif %}
+  
   {% seo %}
+  
+  <!-- 구조화 데이터 -->
+  {% include structured-data.html %}
 </head>

@@ -4,6 +4,9 @@ title: "Korean Cultural Elements in Kedaeheon: A Personal Analysis"
 date: 2025-08-03
 categories: [culture, analysis]
 lang: en
+description: "An analysis of Korean traditional cultural elements in K-Pop Demon Hunters (Kedaeheon). Exploring the historical background of Jeoseung-saja (Korean Grim Reaper) and Mudang (Korean shamans) and their connection to modern idol culture."
+tags: [Kedaeheon, K-POP, Korean-culture, Jeoseung-saja, Mudang, Dokkaebi, Hometown-of-Legends, Exhuma]
+image: "/image/전설의 고향 저승사자.png"
 ---
 
 Hello. This is Geumsan.

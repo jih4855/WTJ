@@ -1,6 +1,6 @@
 # Jekyll 설정
 title: "Welcome to Jinju"
-email: your-email@example.com
+email: blog@jih4855.github.io
 description: >- 
   경남 진주를 중심으로 한 개인 여행 블로그입니다.
   30대 직장인의 시선으로 일상적인 장소들과 소소한 이야기들을 담고 있습니다.
@@ -39,10 +39,36 @@ paginate_path: "/page:num/"
 
 # SEO
 lang: en
-author: Jinju Travel Guide
+author: 
+  name: "Geumsan"
+  email: "blog@jih4855.github.io"
+  twitter: "jih4855"
+  
+# Social Media
 twitter:
-  username: your_twitter_username
+  username: jih4855
   card: summary_large_image
+
+# Open Graph 기본 설정
+logo: "/image/logo.png"
+image: "/image/og-default.png"
+
+# Google Analytics
+google_analytics: GTM-PV39J3NR
+
+# 웹마스터 도구 인증
+webmaster_verifications:
+  google: # Google Search Console 인증 코드
+  bing: # Bing Webmaster 인증 코드
+  naver: # 네이버 웹마스터 인증 코드
+
+# SEO 추가 설정
+seo:
+  type: BlogPosting
+  name: "Welcome to Jinju"
+  headline: "경남 진주 여행 블로그"
+  description: "경남 진주를 중심으로 한 개인 여행 블로그입니다. 30대 직장인의 시선으로 일상적인 장소들과 소소한 이야기들을 담고 있습니다."
+  locale: ko_KR
 
 # 기본값
 defaults:
@@ -51,7 +77,27 @@ defaults:
       type: "posts"
     values:
       layout: "post"
+      author: "Geumsan"
+      image: "/image/og-default.png"
   - scope:
       path: ""
     values:
       layout: "default"
+  - scope:
+      path: "_posts/ko"
+      type: "posts"
+    values:
+      lang: ko
+      locale: ko_KR
+  - scope:
+      path: "_posts/en"
+      type: "posts"
+    values:
+      lang: en
+      locale: en_US
+  - scope:
+      path: "_posts/ja"
+      type: "posts"
+    values:
+      lang: ja
+      locale: ja_JP
