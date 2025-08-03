@@ -1,8 +1,9 @@
 ---
-layout: default
+layout: post
 lang: en
 title: "About"
-description: "Will be updated soon"
+date: 2025-08-03
+description: "Contact information and social media links"
 permalink: /en/about/
 ---
 

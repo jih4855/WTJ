@@ -1,8 +1,9 @@
 ---
-layout: default
+layout: post
 lang: ja
 title: "紹介"
-description: "後日更新予定です"
+date: 2025-08-03
+description: "連絡先およびソーシャルメディア情報"
 permalink: /ja/about/
 ---
 
