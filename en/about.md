@@ -8,4 +8,9 @@ permalink: /en/about/
 
 # About
 
-Contact: jih4855@naver.com
+## Contact
+- **Email**: jih4855@naver.com
+
+## Social Media
+- **Instagram**: *Coming Soon*
+- **Threads**: *Coming Soon*
