@@ -1,15 +1,43 @@
 ---
-layout: post
+layout: default
 title: About
-date: 2025-08-03 00:00:00 +0900
 permalink: /about/
 ---
 
-# About
+<div class="hero">
+  <div class="hero-content">
+    <h1>About</h1>
+    <p>Contact information and social media links</p>
+  </div>
+</div>
 
-## Contact
-- **Email**: jih4855@naver.com
-
-## Social Media
-- **Instagram**: *Coming Soon*
-- **Threads**: *Coming Soon*
+<div class="posts">
+  <div class="container">
+    <div class="posts-grid">
+      <div class="post-card" style="cursor: default;">
+        <div class="post-header">
+          <div class="post-categories">
+            <span class="category-tag">Contact</span>
+          </div>
+        </div>
+        <h2 class="post-title">Get in Touch</h2>
+        <div class="post-excerpt">
+          <p><strong>Email:</strong> jih4855@naver.com</p>
+        </div>
+      </div>
+      
+      <div class="post-card" style="cursor: default;">
+        <div class="post-header">
+          <div class="post-categories">
+            <span class="category-tag">Social</span>
+          </div>
+        </div>
+        <h2 class="post-title">Social Media</h2>
+        <div class="post-excerpt">
+          <p><strong>Instagram:</strong> <em>Coming Soon</em></p>
+          <p><strong>Threads:</strong> <em>Coming Soon</em></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
