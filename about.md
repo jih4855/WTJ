@@ -9,7 +9,7 @@ permalink: /about/
     <div class="hero">
       <div class="hero-content">
         <h1>About</h1>
-        <p>추후 업데이트 될 예정입니다.</p>
+        <p>Contact: jih4855@naver.com</p>
       </div>
     </div>
   </div>

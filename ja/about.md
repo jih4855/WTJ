@@ -11,7 +11,7 @@ permalink: /ja/about/
     <div class="hero">
       <div class="hero-content">
         <h1>紹介</h1>
-        <p>後日更新予定です。</p>
+        <p>連絡先: jih4855@naver.com</p>
       </div>
     </div>
   </div>

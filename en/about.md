@@ -11,7 +11,7 @@ permalink: /en/about/
     <div class="hero">
       <div class="hero-content">
         <h1>About</h1>
-        <p>Will be updated soon.</p>
+        <p>Contact: jih4855@naver.com</p>
       </div>
     </div>
   </div>
