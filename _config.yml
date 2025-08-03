@@ -1,6 +1,6 @@
 # Jekyll 설정
 title: "Welcome to Jinju"
-email: blog@jih4855.github.io
+email: jih4855@naver.com
 description: >- 
   경남 진주를 중심으로 한 개인 여행 블로그입니다.
   30대 직장인의 시선으로 일상적인 장소들과 소소한 이야기들을 담고 있습니다.
@@ -41,7 +41,7 @@ paginate_path: "/page:num/"
 lang: en
 author: 
   name: "Geumsan"
-  email: "blog@jih4855.github.io"
+  email: "jih4855@naver.com"
   twitter: "jih4855"
   
 # Social Media
