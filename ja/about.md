@@ -2,7 +2,7 @@
 layout: post
 lang: ja
 title: "紹介"
-date: 2025-08-03
+date: 2025-08-03 00:00:00 +0900
 description: "連絡先およびソーシャルメディア情報"
 permalink: /ja/about/
 ---

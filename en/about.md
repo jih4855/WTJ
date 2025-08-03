@@ -2,7 +2,7 @@
 layout: post
 lang: en
 title: "About"
-date: 2025-08-03
+date: 2025-08-03 00:00:00 +0900
 description: "Contact information and social media links"
 permalink: /en/about/
 ---

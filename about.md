@@ -1,7 +1,7 @@
 ---
 layout: post
 title: About
-date: 2025-08-03
+date: 2025-08-03 00:00:00 +0900
 permalink: /about/
 ---
 
